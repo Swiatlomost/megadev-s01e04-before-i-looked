@@ -1,0 +1,79 @@
+name: Publish preview
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Review with marker, or clean after review'
+        type: choice
+        options: [review, clean]
+        required: true
+      lane_marker:
+        description: 'Lane marker (required for review; ignored for clean)'
+        type: string
+        required: false
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    env:
+      COREPACK_ENABLE_AUTO_PIN: '0'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+      - run: corepack pnpm@12.16.1 install --frozen-lockfile --ignore-scripts
+      - name: Prepare environment
+        env:
+          INPUT_MODE: ${{ inputs.mode }}
+          INPUT_MARKER: ${{ inputs.lane_marker }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "$INPUT_MODE" == review ]]; then
+            if [[ -z "${INPUT_MARKER//[[:space:]]/}" || "$INPUT_MARKER" == *$'\n'* || "$INPUT_MARKER" == *$'\r'* ]]; then
+              echo 'Review requires a nonblank, single-line marker.' >&2
+              exit 1
+            fi
+            escaped=${INPUT_MARKER//'%'/'%25'}
+            printf '::add-mask::%s\n' "$escaped"
+            node --input-type=module <<'NODE'
+          import { writeFileSync } from 'node:fs';
+          import { parseEnv } from 'node:util';
+          const value = process.env.INPUT_MARKER;
+          const candidates = [`LANE_MARKER='${value}'`, `LANE_MARKER="${value}"`, `LANE_MARKER=${value}`];
+          const line = candidates.find(candidate => parseEnv(candidate).LANE_MARKER === value);
+          if (!line) {
+            console.error('Marker cannot be represented safely in an env file.');
+            process.exit(1);
+          }
+          writeFileSync('.env', `${line}\n`, { mode: 0o600 });
+          NODE
+          elif [[ "$INPUT_MODE" == clean ]]; then
+            : > .env
+          else
+            echo 'Invalid preview mode.' >&2
+            exit 1
+          fi
+      - name: Export digest
+        run: env -u LANE_MARKER node --import tsx --env-file=.env scripts/export-preview.ts --out-dir "$RUNNER_TEMP/rig-preview"
+      - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3
+        with:
+          path: ${{ runner.temp }}/rig-preview
+      - id: deployment
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4
