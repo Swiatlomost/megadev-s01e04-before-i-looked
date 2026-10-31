@@ -80,16 +80,16 @@ Done when: the preview link no longer shows the lane marker.
 
 ## Completion · 2026-10-31
 
-Review was confirmed complete; after separate approval, the public preview was cleaned at the same link. Issue #9 remains open pending acceptance and closure.
+Review was confirmed complete; after separate approval, the public preview was cleaned at the same link. The linked GitHub issues are the source of their current states; course acceptance is tracked separately.
 
 ## Issues
 
-- [#1 · Kontrakt podsumowania nocy: typy i wynik readNight](https://github.com/Swiatlomost/megadev-s01e04-before-i-looked/issues/1) — closed
-- [#2 · Czytnik i agregacja nocnego dziennika — TDD](https://github.com/Swiatlomost/megadev-s01e04-before-i-looked/issues/2) — closed
-- [#3 · Strona podsumowania HTML — TDD](https://github.com/Swiatlomost/megadev-s01e04-before-i-looked/issues/3) — closed
-- [#4 · JSON API podsumowania — TDD](https://github.com/Swiatlomost/megadev-s01e04-before-i-looked/issues/4) — closed
-- [#5 · Dostępne noce i linki statusu — TDD](https://github.com/Swiatlomost/megadev-s01e04-before-i-looked/issues/5) — closed
-- [#6 · Testy integracyjne tras HTML i JSON](https://github.com/Swiatlomost/megadev-s01e04-before-i-looked/issues/6) — closed
-- [#7 · E2E użytkownika: wybór nocy i odczyt raportu](https://github.com/Swiatlomost/megadev-s01e04-before-i-looked/issues/7) — closed
-- [#8 · Publiczny podgląd HTML do recenzji](https://github.com/Swiatlomost/megadev-s01e04-before-i-looked/issues/8) — closed
-- [#9 · Usunięcie znacznika i zamknięcie planu po recenzji](https://github.com/Swiatlomost/megadev-s01e04-before-i-looked/issues/9) — open (pending acceptance and closure)
+- [#1 · Kontrakt podsumowania nocy: typy i wynik readNight](https://github.com/Swiatlomost/megadev-s01e04-before-i-looked/issues/1)
+- [#2 · Czytnik i agregacja nocnego dziennika — TDD](https://github.com/Swiatlomost/megadev-s01e04-before-i-looked/issues/2)
+- [#3 · Strona podsumowania HTML — TDD](https://github.com/Swiatlomost/megadev-s01e04-before-i-looked/issues/3)
+- [#4 · JSON API podsumowania — TDD](https://github.com/Swiatlomost/megadev-s01e04-before-i-looked/issues/4)
+- [#5 · Dostępne noce i linki statusu — TDD](https://github.com/Swiatlomost/megadev-s01e04-before-i-looked/issues/5)
+- [#6 · Testy integracyjne tras HTML i JSON](https://github.com/Swiatlomost/megadev-s01e04-before-i-looked/issues/6)
+- [#7 · E2E użytkownika: wybór nocy i odczyt raportu](https://github.com/Swiatlomost/megadev-s01e04-before-i-looked/issues/7)
+- [#8 · Publiczny podgląd HTML do recenzji](https://github.com/Swiatlomost/megadev-s01e04-before-i-looked/issues/8)
+- [#9 · Usunięcie znacznika i zamknięcie planu po recenzji](https://github.com/Swiatlomost/megadev-s01e04-before-i-looked/issues/9)
