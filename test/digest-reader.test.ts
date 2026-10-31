@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import * as fs from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -16,7 +16,6 @@ beforeEach(() => {
   fs.mkdirSync(runs);
 });
 afterEach(() => {
-  vi.restoreAllMocks();
   fs.rmSync(root, { recursive: true, force: true });
 });
 
@@ -64,12 +63,15 @@ describe('readNight input and IO', () => {
     expect(readNight(runs, night)).toEqual({ kind: 'read-error' });
   });
 
-  it('does not mask permission errors or disclose paths', () => {
+  it.skipIf(process.getuid?.() === 0)('does not mask real permission errors or disclose paths', () => {
     writeEvents([base]);
-    vi.spyOn(fs, 'readFileSync').mockImplementation(() => {
-      throw Object.assign(new Error(`private ${root}`), { code: 'EACCES' });
-    });
-    expect(readNight(runs, night)).toEqual({ kind: 'read-error' });
+    const file = join(runs, `${night}.jsonl`);
+    fs.chmodSync(file, 0o000);
+    try {
+      expect(readNight(runs, night)).toEqual({ kind: 'read-error' });
+    } finally {
+      fs.chmodSync(file, 0o600);
+    }
   });
 
   it('reads fresh data on each call without a cache', () => {
